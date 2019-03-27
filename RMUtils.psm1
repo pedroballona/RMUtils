@@ -1,16 +1,11 @@
 Set-Variable DBPath -option Constant -value "\\tecnologiabh\VersoesHomologacao\BaseDeDadosSQL\"
 
-class RMDBVersion {
-    [string]$Version
-    [string]$Path
-}
-
 function Get-RMDBVersions {
     param(
         [Parameter(Mandatory=$false)][string]$Version
     )
     Get-ChildItem $DBPath -Filter "Versao*" -Directory | ForEach-Object{
-        [RMDBVersion]@{
+        [pscustomobject]@{
             Version=$_
             Path=Join-Path -Path $DBPath -ChildPath $_
         }
@@ -27,7 +22,7 @@ function Restore-RMDB {
     [cmdletbinding()]
     param (
         [Parameter(ParameterSetName="FromParameter", Mandatory=$true)][string]$Version,
-        [Parameter(ParameterSetName="FromInput", Mandatory=$true, ValueFromPipeline=$true)][RMDBVersion]$InputObject,
+        [Parameter(ParameterSetName="FromInput", Mandatory=$true, ValueFromPipeline=$true)][pscustomobject]$InputObject,
         [Parameter(Mandatory=$true)][string]$Name
     )
     if(!($InputObject)) {
